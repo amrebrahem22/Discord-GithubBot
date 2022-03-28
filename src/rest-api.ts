@@ -1,5 +1,5 @@
 import express, {Request, Response} from 'express';
-import { Client } from 'discord.js';
+import { Client, TextChannel, MessageEmbed  } from 'discord.js';
 
 const GithubWebHook = require('express-github-webhook');
 const webhookHandler = GithubWebHook({ path: '/webhook', secret: 'secret' });
@@ -10,12 +10,25 @@ export function createRestApi(client: Client) {
 
     app.use(webhookHandler);
 
-    app.post('/github', function(req, res) {
+    app.post('/github', async (req: Request, res: Response) => {
+        const {title, html_url, user, body} = req.body.issue;
         console.log('Github post', req.body);
-        res.json({ ok: 1, data: req.body }); // Doesn't matter, can be any response
-    });
-    app.get('/github', function(req, res) {
-        res.send('Github get Should be ok now'); // Doesn't matter, can be any response
+        const guild = client.guilds.cache.get(process.env.GUILD_ID as string)
+
+        if (guild) {
+            const channel = (guild.channels.cache.get("958056228343402516") as TextChannel );
+
+            const issueEmbed = new MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle(title)
+                .setURL(html_url)
+                .setAuthor({ name: user.login, iconURL: user.avatar_url, url: user.html_url })
+                .setDescription(body)
+                .setTimestamp();
+
+            if (channel) channel.send({ embeds: [issueEmbed]})
+        }
+        res.json({ ok: 1, data: req.body });
     });
 
     return app;
