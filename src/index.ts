@@ -1,4 +1,5 @@
 import { Client, Intents } from 'discord.js';
+import { createRestApi } from './rest-api';
 import {config} from 'dotenv';
 config();
 
@@ -11,4 +12,13 @@ client.once('ready', () => {
 });
 
 // Login to Discord
-client.login(token);
+client.login(process.env.DISCORD_TOKEN);
+
+
+const PORT = process.env.PORT || 8000;
+
+const api = createRestApi(client);
+
+api.listen(PORT, () => {
+    console.log(`[rest-api]: Bot rest-api is running on http://localhost:${PORT}`)
+})
