@@ -12,7 +12,10 @@ export function createRestApi(client: Client) {
 
     app.post('/github', function(req, res) {
         console.log('Github post', req.body);
-        res.json({ ok: 1 }); // Doesn't matter, can be any response
+        res.json({ ok: 1, data: req.body }); // Doesn't matter, can be any response
+    });
+    app.get('/github', function(req, res) {
+        res.send('Github get Should be ok now'); // Doesn't matter, can be any response
     });
 
     return app;
