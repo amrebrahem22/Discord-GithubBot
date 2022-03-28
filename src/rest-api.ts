@@ -10,20 +10,9 @@ export function createRestApi(client: Client) {
 
     app.use(webhookHandler);
 
-    webhookHandler.on('*', function (event: any, repo: any, data: any) {
-        console.log('GITHUB: ', {event, repo, data})
-    });
-     
-    webhookHandler.on('event', function (repo: any, data: any) {
-        console.log('GITHUB: ', {repo, data})
-    });
-     
-    webhookHandler.on('reponame', function (event: any, data: any) {
-        console.log('GITHUB: ', {event, data})
-    });
-     
-    webhookHandler.on('error', function (err: any, req: any, res: any) {
-        console.log('GITHUB: ', {req, res, err})
+    app.post('/github', function(req, res) {
+        console.log('Github post', req.body);
+        res.json({ ok: 1 }); // Doesn't matter, can be any response
     });
 
     return app;
