@@ -13,6 +13,9 @@
   "keywords": [],
   "author": "Amr Ibrahim",
   "license": "ISC",
+  "engines": {
+    "node": ">16.14.0"
+  },
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.23",
