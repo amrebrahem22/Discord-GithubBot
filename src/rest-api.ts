@@ -44,17 +44,19 @@ export function createRestApi(client: Client) {
                 .setDescription(body)
                 .setTimestamp();
 
-                channel.send({ embeds: [issueEmbed]});
+                const message = await channel.send({ embeds: [issueEmbed]});
                 
-                // create thread
-                const thread = await (channel as TextChannel).threads.create({
+                const thread = await message.startThread({
                     name: `Github Issue: ${title}`,
                     reason: `Support ticket for ${title}`
-                });
+                })
+                // create thread
                 
                 // send thread message
                 thread.send(`**User** <@${user.login}>
                 **Issue: ** ${title}`);
+
+
 
                 await Issue.create({title, body, threadId: thread.id, user: user.login});
 
