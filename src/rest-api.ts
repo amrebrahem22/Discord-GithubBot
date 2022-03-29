@@ -20,10 +20,16 @@ export function createRestApi(client: Client) {
             const channel = (guild.channels.cache.get("958056228343402516") as TextChannel );
             // if comment
             if(comment) {
-                // channel.send('issue Reply');
-                // // get thread id, and send this message
-                // const issue = await Issue.findOne({title});
-                // const thread = channel.threads.cache().get(issue.threadId);
+                // get thread id, and send this message
+                Issue.findOne({title}, async (err: any, issue: { threadId: any; }) => {
+                    if (err) console.log(err);
+                    
+                    const thread = channel.threads.cache.find((i: { id: any }) => i.id === issue.threadId);
+
+                    if (thread) thread.send(`**User** <@${comment?.user.login}>
+                    **Comment: ** ${comment?.body}`);
+                    });
+                
             } else {
                 // new issue
                 const issueEmbed = new MessageEmbed()
@@ -41,13 +47,14 @@ export function createRestApi(client: Client) {
                     name: `Github Issue ${Date.now()}`,
                     reason: `Support ticket for ${title}`
                 });
+                
+                // send thread message
+                thread.send(`**User** <@${user.login}>
+                **Issue: ** ${title}`);
 
                 // TODO: store thread to database
                 await Issue.create({title, body, threadId: thread.id, user: user.login});
 
-                // send thread message
-                thread.send(`**User** <@${user.login}>
-                **Issue: ** ${title}`);
             }
         }
         res.json({ ok: 1, data: req.body });
