@@ -1,4 +1,5 @@
 import { Client, Intents } from 'discord.js';
+import mongoose from 'mongoose';
 import { createRestApi } from './rest-api';
 import {config} from 'dotenv';
 config();
@@ -14,6 +15,11 @@ client.once('ready', () => {
 // Login to Discord
 client.login(process.env.DISCORD_TOKEN);
 
+// connect to mongo
+mongoose.connect(
+    process.env.MONGO_URL as string,
+).then(() => console.log('Database connected.'))
+.catch((err: any) => console.log('Database Error: ', err));
 
 const PORT = process.env.PORT || 8000;
 
