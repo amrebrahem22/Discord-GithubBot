@@ -19,11 +19,11 @@ export function createRestApi(client: Client) {
         if (guild) {
             const channel = (guild.channels.cache.get("958056228343402516") as TextChannel );
             // if comment
-            if(comment) {
+            if(req.body.action !== 'opened') {
                 // get thread id, and send this message
                 Issue.findOne({title}, async (err: any, issue: { threadId: any; }) => {
                     if (err) console.log(err);
-                    
+
                     const thread = channel.threads.cache.find((i: { id: any }) => i.id === issue.threadId);
 
                     if (thread) thread.send(`**User** <@${comment?.user.login}>
