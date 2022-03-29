@@ -21,8 +21,8 @@ export function createRestApi(client: Client) {
 
                     const thread = channel.threads.cache.find((i: { id: any }) => i.id === issue.threadId);
 
-                    if (thread) thread.send(`**User** <@${req.body.issue.comment?.user.login}>
-                    **Comment: ** ${req.body.issue.comment?.body}`);
+                    if (thread) thread.send(`**User** <@${req.body.comment?.user.login}>
+                    **Comment: ** ${req.body.comment?.body}`);
                     });
                 
             } else {
