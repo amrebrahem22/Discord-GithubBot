@@ -7,7 +7,7 @@ export function createRestApi(client: Client) {
     app.use(express.json());
 
     app.post('/github', async (req: Request, res: Response) => {
-        const {title, html_url, user, body, comment} = req.body.issue;
+        const {title, html_url, user, body} = req.body.issue;
         
         const guild = client.guilds.cache.get(process.env.GUILD_ID as string)
 
@@ -21,25 +21,25 @@ export function createRestApi(client: Client) {
 
                     const thread = channel.threads.cache.find((i: { id: any }) => i.id === issue.threadId);
 
-                    if (thread) thread.send(`**User** <@${comment?.user.login}>
-                    **Comment: ** ${comment?.body}`);
+                    if (thread) thread.send(`**User** <@${req.body.issue.comment?.user.login}>
+                    **Comment: ** ${req.body.issue.comment?.body}`);
                     });
                 
             } else {
                 // new issue
                 const issueEmbed = new MessageEmbed()
                 .setColor('#0099ff')
-                .setTitle(title)
+                .setTitle(`Issue: ${title}`)
                 .setURL(html_url)
                 .setAuthor({ name: user.login, iconURL: user.avatar_url, url: user.html_url })
                 .setDescription(body)
                 .setTimestamp();
 
                 channel.send({ embeds: [issueEmbed]});
-
+                
                 // create thread
                 const thread = await (channel as TextChannel).threads.create({
-                    name: `Github Issue ${title}`,
+                    name: `Github Issue: ${title}`,
                     reason: `Support ticket for ${title}`
                 });
                 
