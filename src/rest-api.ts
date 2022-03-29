@@ -24,7 +24,7 @@ export function createRestApi(client: Client) {
                     const thread = channel.threads.cache.find((i: { id: any }) => i.id === issue.threadId);
 
                     const issueEmbed = new MessageEmbed()
-                    .setColor('#0099ff')
+                    .setColor('#fca503')
                     .setTitle(`Comment: ${body}`)
                     .setURL(html_url)
                     .setAuthor({ name: user.login, iconURL: user.avatar_url, url: user.html_url })
