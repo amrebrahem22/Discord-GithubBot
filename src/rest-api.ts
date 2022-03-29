@@ -19,11 +19,20 @@ export function createRestApi(client: Client) {
                 Issue.findOne({title}, async (err: any, issue: { threadId: any; }) => {
                     if (err) console.log(err);
 
+                    const {html_url, user, body} = req.body.comment;
+
                     const thread = channel.threads.cache.find((i: { id: any }) => i.id === issue.threadId);
 
-                    if (thread) thread.send(`**User** <@${req.body.comment?.user.login}>
-                    **Comment: ** ${req.body.comment?.body}`);
-                    });
+                    const issueEmbed = new MessageEmbed()
+                    .setColor('#0099ff')
+                    .setTitle(`Comment: ${body}`)
+                    .setURL(html_url)
+                    .setAuthor({ name: user.login, iconURL: user.avatar_url, url: user.html_url })
+                    .setTimestamp();
+
+                    if (thread) thread.send({ embeds: [issueEmbed]});
+
+                });
                 
             } else {
                 // new issue
